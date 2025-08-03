@@ -2,15 +2,15 @@
 
 # clone the Bookinfo microservices system
 cd ..
-git clone git@github.com:zxc90836/ChatOps4Msa-Sample-Bookinfo-Productpage.git
-git clone git@github.com:zxc90836/ChatOps4Msa-Sample-Bookinfo-Reviews.git
-git clone git@github.com:zxc90836/ChatOps4Msa-Sample-Bookinfo-Ratings.git
-git clone git@github.com:zxc90836/ChatOps4Msa-Sample-Bookinfo-Details.git
+git clone git@github.com:Kunishy/ChatOps4Msa-Sample-Bookinfo-Productpage.git
+git clone git@github.com:Kunishy/ChatOps4Msa-Sample-Bookinfo-Reviews.git
+git clone git@github.com:Kunishy/ChatOps4Msa-Sample-Bookinfo-Ratings.git
+git clone git@github.com:Kunishy/ChatOps4Msa-Sample-Bookinfo-Details.git
 
 cd ChatOps4Msa
 
 # 清理RabbitMQ日誌文件
-sudo rm -rf /home/soselab/workspace/ChatOps4Msa/rabbitmq/data/mnesia/rabbit@*/quorum/rabbit@*/00000002.wal
+sudo rm -rf /home/chatops4msa_kunishy/workspace/ChatOps4Msa/rabbitmq/data/mnesia/rabbit@*/quorum/rabbit@*/00000002.wal
 
 # close the previous container.
 docker compose down

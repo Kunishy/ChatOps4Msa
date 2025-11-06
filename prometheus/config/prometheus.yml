@@ -14,7 +14,7 @@ scrape_configs:
     scrape_interval: 10s 
     metrics_path: /metrics
     static_configs:
-      - targets: ['192.168.101.6:8081']
+      - targets: ['192.168.101.24:8081']
 
 
 

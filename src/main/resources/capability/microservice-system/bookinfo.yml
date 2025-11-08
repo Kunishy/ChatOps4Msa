@@ -6,7 +6,7 @@ info:
 
 service:
   - name: ChatOps4Msa-Sample-Bookinfo-Productpage
-    url: http://192.168.101.6:9080
+    url: http://192.168.101.24:9080
     repository: https://github.com/Kunishy/ChatOps4Msa-Sample-Bookinfo-Productpage
     description: This is the product page microservice.
     scan_run_id: 5947043944
@@ -14,7 +14,7 @@ service:
     sonarqube_project: ChatOps4Msa-Sample-Bookinfo-Productpage
 
   - name: ChatOps4Msa-Sample-Bookinfo-Reviews
-    url: http://192.168.101.6:9083
+    url: http://192.168.101.24:9083
     repository: https://github.com/Kunishy/ChatOps4Msa-Sample-Bookinfo-Reviews
     description: This is the reviews microservice.
     scan_run_id: 5947038973
@@ -22,7 +22,7 @@ service:
     sonarqube_project: ChatOps4Msa-Sample-Bookinfo-Reviews
 
   - name: ChatOps4Msa-Sample-Bookinfo-Details
-    url: http://192.168.101.6:9081
+    url: http://192.168.101.24:9081
     repository: https://github.com/Kunishy/ChatOps4Msa-Sample-Bookinfo-Details
     description: This is the details microservice.
     scan_run_id: 5947014232
@@ -30,7 +30,7 @@ service:
     sonarqube_project: ChatOps4Msa-Sample-Bookinfo-Details
 
   - name: ChatOps4Msa-Sample-Bookinfo-Ratings
-    url: http://192.168.101.6:9082
+    url: http://192.168.101.24:9082
     repository: https://github.com/Kunishy/ChatOps4Msa-Sample-Bookinfo-Ratings
     description: This is the ratings microservice.
     scan_run_id: 5947028699

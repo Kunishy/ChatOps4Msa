@@ -38,7 +38,7 @@ low_code:
                   jsonpath: $.value
                   assign: value
               - toolkit-discord-text:
-                  text: ${metric_name}：${value}
+                  text: "${metric_name}：${value}"
     - name: get-sonarqube-microservice_quality
       parameter:
         microservice_system_name: microservice_system_name
@@ -51,7 +51,7 @@ low_code:
             info: sonarqube_project
             assign: sonarqube_project_list
         - toolkit-flow-value_to_local:
-            value: SonarQube project urls：\n
+            value: "SonarQube project urls：\n"
             assign: SonarQube_project_urls
         - toolkit-flow-value_to_local:
             value: You are a microservice architecture quality analysis expert。Please analyze the system's quality risks and improvement strategies based on the following SonarQube metrics and high-severity issues。The included score is calculated based on the metric distribution of 36,000 high-star GitHub projects；the closer to 100, the more stable the quality。Please organize the recommendations in the following format：1. Quality Disparity Analysis Across Microservices 2. Common Issues and Technical Debt Patterns 3. Refactoring and Modularization Recommendations 4. Systemic Risk and Sustainability Assessment。The following is a data summary；please exclude any statements related to coverage。I will provide the content in .md format,Please respond in the same language as the user's question。
@@ -67,7 +67,7 @@ low_code:
             todo:
               - toolkit-string-join:
                   original: ${SonarQube_project_urls}
-                  join: ${project_name}：${sonarqube_url}/dashboard?id=${project_name}\n
+                  join: "${project_name}：${sonarqube_url}/dashboard?id=${project_name}\n"
                   assign: SonarQube_project_urls
               - toolkit-restapi-auth_get:
                   url: ${sonarqube_url}/api/measures/component?component=${project_name}&metricKeys=ncloc,bugs,vulnerabilities,coverage,code_smells,sqale_index,sqale_debt_ratio,duplicated_lines_density,complexity,reliability_rating,security_rating
@@ -88,7 +88,7 @@ low_code:
                   language: python
                   assign: full_score
               - toolkit-string-join:
-                  original: project name：${project_name}\n metric and issue：${full_score}\n\n
+                  original: "project name：${project_name}\n metric and issue：${full_score}\n\n"
                   join: ""
                   assign: service_summary
               - toolkit-string-join:
@@ -140,7 +140,7 @@ low_code:
             table_name: sonarqube_measures_and_metrics
             assign: matched_results
         - toolkit-flow-value_to_local:
-            value: User question is：[${user_question}]，based on the documentation I provided please answer the question completely without going beyond the scope of the information。Include definitions、examples、and explanations。Respond in full natural language, not just keywords。Below are the pre-filtered SONAR metric explanations；select the correct ones to respond with（may be more than one）,Please respond in the same language as the user's question。：
+            value: "User question is：[${user_question}]，based on the documentation I provided please answer the question completely without going beyond the scope of the information。Include definitions、examples、and explanations。Respond in full natural language, not just keywords。Below are the pre-filtered SONAR metric explanations；select the correct ones to respond with（may be more than one）,Please respond in the same language as the user's question。："
             assign: llm_setting
         - toolkit-string-join:
             original: ${llm_setting}
@@ -169,7 +169,9 @@ low_code:
             assign: issue_list
 
         - toolkit-flow-value_to_local:
-            value: 【project name】\n${project_name}\n
+            value: |
+              【project name】
+              ${project_name}
             assign: full_summary
 
         - toolkit-list-foreach:
@@ -233,7 +235,7 @@ low_code:
 
               - toolkit-json-parse:
                   json: ${sliced_code_list}
-                  jsonpath: $[*][1]
+                  jsonpath: "$[*][1]"
                   assign: sliced_code_lines
 
               - toolkit-string-join:
@@ -242,7 +244,15 @@ low_code:
                   assign: code_snippet
 
               - toolkit-flow-value_to_local:
-                  value: 【File and Location】\nLine ${line_number} in ${component_key}\n【Issue Description】\n${issue_message}\n【Rule Violation Suggestion】\n${rule_description}\n【Code Snippet】\n${code_snippet}\n
+                  value: |
+                    【File and Location】
+                    Line ${line_number} in ${component_key}
+                    【Issue Description】
+                    ${issue_message}
+                    【Rule Violation Suggestion】
+                    ${rule_description}
+                    【Code Snippet】
+                    ${code_snippet}
                   assign: issue_summary
 
               - toolkit-string-join:
@@ -251,7 +261,11 @@ low_code:
                   assign: full_summary
 
         - toolkit-flow-value_to_local:
-            value: You are a senior software quality analysis consultant。The following are high-risk maintainability issues from a SonarQube scan。If multiple issues occur in the same code area, please group them together。Conduct a comprehensive analysis and propose refactoring and remediation suggestions：\n\n${full_summary}\nPlease summarize repeated patterns, key refactoring points, common naming issues, and module design problems, and propose specific improvement strategies。Note that the provided information will not be shown in the user interface, so include the number of issues and their locations before giving modification suggestions。I will submit the content in .md format。
+            value: |
+              You are a senior software quality analysis consultant。The following are high-risk maintainability issues from a SonarQube scan。If multiple issues occur in the same code area, please group them together。Conduct a comprehensive analysis and propose refactoring and remediation suggestions：
+
+              ${full_summary}
+              Please summarize repeated patterns, key refactoring points, common naming issues, and module design problems, and propose specific improvement strategies。Note that the provided information will not be shown in the user interface, so include the number of issues and their locations before giving modification suggestions。I will submit the content in .md format。
             assign: llm_prompt
         - toolkit-llm-call:
             prompt: ${llm_prompt}
@@ -266,3 +280,65 @@ low_code:
         - toolkit-discord-text:
             text:
               ${llm_response}
+    - name: get-sonarqube-all_scores
+      parameter:
+        microservice_system_name: microservice_system_name
+      description: Get all microservice quality scores for a given system and display them in a table.
+      access: public
+      body:
+        - toolkit-info-get:
+            system: ${microservice_system_name}
+            service: all_service
+            info: sonarqube_project
+            assign: sonarqube_project_list
+
+        - toolkit-flow-value_to_local:
+            value: "| Microservice                                | Score   |\n|---------------------------------------------|---------|\n"
+            assign: result_table
+
+        - toolkit-list-foreach:
+            list: ${sonarqube_project_list}
+            element_name: project_name
+            todo:
+              - toolkit-restapi-auth_get:
+                  url: ${sonarqube_url}/api/measures/component?component=${project_name}&metricKeys=ncloc,bugs,vulnerabilities,coverage,code_smells,sqale_index,sqale_debt_ratio,duplicated_lines_density,complexity,reliability_rating,security_rating
+                  api_token: ${sonarqube_token}
+                  assign: metric_response
+              - toolkit-restapi-auth_get:
+                  url: ${sonarqube_url}/api/issues/search?componentKeys=${project_name}&severities=CRITICAL&types=CODE_SMELL,BUG,VULNERABILITY
+                  api_token: ${sonarqube_token}
+                  assign: issue_response
+              - toolkit-sonar-project_extract:
+                  project_name: ${project_name}
+                  metric_response: ${metric_response}
+                  issue_response: ${issue_response}
+                  assign: cleaned_response
+              - toolkit-sonar-score_distribution:
+                  sonar_json: ${cleaned_response}
+                  language: python
+                  assign: score_json
+              - toolkit-json-parse:
+                  json: ${score_json}
+                  jsonpath: $.score
+                  assign: current_score
+              - toolkit-string-pad_end:
+                  input: " ${project_name}"
+                  length: "45"
+                  padChar: " "
+                  assign: padded_project_name
+              - toolkit-string-pad_start:
+                  input: "${current_score} "
+                  length: "7"
+                  padChar: " "
+                  assign: padded_score
+              - toolkit-string-join:
+                  original: ${result_table}
+                  join: "|${padded_project_name}|${padded_score}|\n"
+                  assign: result_table
+
+        - toolkit-discord-text:
+            text: |
+              📊 **SonarQube Quality Scores for ${microservice_system_name}**
+              ```
+              ${result_table}
+              ```

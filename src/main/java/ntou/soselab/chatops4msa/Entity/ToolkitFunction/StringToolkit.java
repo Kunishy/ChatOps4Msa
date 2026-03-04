@@ -68,4 +68,41 @@ public class StringToolkit extends ToolkitFunction {
         Matcher matcher = pattern.matcher(string);
         return matcher.matches() ? "true" : "false";
     }
+
+    /**
+     * @param input The string to pad.
+     * @param length The target length.
+     * @param padChar The character to use for padding.
+     * @return The padded string.
+     */
+    public String toolkitStringPadEnd(String input, String length, String padChar) {
+        int targetLength = Integer.parseInt(length);
+        if (input == null) {
+            input = "";
+        }
+        StringBuilder sb = new StringBuilder(input);
+        while (sb.length() < targetLength) {
+            sb.append(padChar);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * @param input The string to pad.
+     * @param length The target length.
+     * @param padChar The character to use for padding.
+     * @return The padded string.
+     */
+    public String toolkitStringPadStart(String input, String length, String padChar) {
+        int targetLength = Integer.parseInt(length);
+        if (input == null) {
+            input = "";
+        }
+        StringBuilder sb = new StringBuilder();
+        while (sb.length() + input.length() < targetLength) {
+            sb.append(padChar);
+        }
+        sb.append(input);
+        return sb.toString();
+    }
 }

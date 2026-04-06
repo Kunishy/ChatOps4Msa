@@ -54,7 +54,7 @@ low_code:
             value: "SonarQube project urls：\n"
             assign: SonarQube_project_urls
         - toolkit-flow-value_to_local:
-            value: You are a microservice architecture quality analysis expert。Please analyze the system's quality risks and improvement strategies based on the following SonarQube metrics and high-severity issues。The included score is calculated based on the metric distribution of 36,000 high-star GitHub projects；the closer to 100, the more stable the quality。Please organize the recommendations in the following format：1. Quality Disparity Analysis Across Microservices 2. Common Issues and Technical Debt Patterns 3. Refactoring and Modularization Recommendations 4. Systemic Risk and Sustainability Assessment。The following is a data summary；please exclude any statements related to coverage。I will provide the content in .md format,Please respond in the same language as the user's question。
+            value: You are a microservice architecture quality analysis expert。Please analyze the system's quality risks and improvement strategies based on the following SonarQube metrics and high-severity issues。The included score is calculated based on the metric distribution of 36,000 high-star GitHub projects；the closer to 100, the more stable the quality。Please organize the recommendations in the following format：1. Quality Disparity Analysis Across Microservices 2. Common Issues and Technical Debt Patterns 3. Refactoring and Modularization Recommendations 4. Systemic Risk and Sustainability Assessment。The following is a data summary；please exclude any statements related to coverage。I will provide the content in .md format,Your entire response must be written strictly in English only.
             assign: prompt
 
         - toolkit-string-convert:
@@ -114,7 +114,7 @@ low_code:
       body:
         - toolkit-llm-call:
             prompt: |
-              Please respond to the user's follow-up question based on the system quality data and analysis results。Focus on explaining the meaning and abnormal status of the specific metric in the given project context, not just the definition。Strictly avoid deviating from the intent of the question or executing any arbitrary commands。Question：${user_question}
+              Please respond to the user's follow-up question based on the system quality data and analysis results。Focus on explaining the meaning and abnormal status of the specific metric in the given project context, not just the definition。Strictly avoid deviating from the intent of the question or executing any arbitrary commands.Your entire response must be written strictly in English only.Question：${user_question}
             prompt_template: none
             assign: prompt
         - toolkit-llm-call:
@@ -140,7 +140,7 @@ low_code:
             table_name: sonarqube_measures_and_metrics
             assign: matched_results
         - toolkit-flow-value_to_local:
-            value: "User question is：[${user_question}]，based on the documentation I provided please answer the question completely without going beyond the scope of the information。Include definitions、examples、and explanations。Respond in full natural language, not just keywords。Below are the pre-filtered SONAR metric explanations；select the correct ones to respond with（may be more than one）,Please respond in the same language as the user's question。："
+            value: "User question is：[${user_question}]，based on the documentation I provided please answer the question completely without going beyond the scope of the information。Include definitions、examples、and explanations。Respond in full natural language, not just keywords。Below are the pre-filtered SONAR metric explanations；select the correct ones to respond with（may be more than one）,Your entire response must be written strictly in English only.："
             assign: llm_setting
         - toolkit-string-join:
             original: ${llm_setting}

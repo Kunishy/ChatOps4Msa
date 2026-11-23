@@ -37,3 +37,7 @@ build/
 application.properties
 .mvn/wrapper/maven-wrapper.properties
 src/main/resources/capability/secret.yml
+### Docker runtime data ###
+grafana/data/
+prometheus/data/
+rabbitmq/data/
